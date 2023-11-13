@@ -1,0 +1,19 @@
+services:
+  axon-server:
+    image: axoniq/axonserver:latest-dev
+    ports:
+      - "8024:8024"
+      - "8124:8124"
+      - "8224:8224"
+  postgres-1:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=superSecret
+  postgres-2:
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_PASSWORD=superSecret

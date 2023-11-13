@@ -1,0 +1,10 @@
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" xsi:schemalocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+    <persistence-unit name="projection">
+        <class>tech.vermorken.multidbconfig.query.projection.BoringEntity</class>
+        <class>org.axonframework.eventhandling.tokenstore.jpa.TokenEntry</class>
+    </persistence-unit>
+    <persistence-unit name="secondary">
+        <class>tech.vermorken.multidbconfig.query.analytics.AggregateCount</class>
+        <class>org.axonframework.eventhandling.tokenstore.jpa.TokenEntry</class>
+    </persistence-unit>
+</persistence>
