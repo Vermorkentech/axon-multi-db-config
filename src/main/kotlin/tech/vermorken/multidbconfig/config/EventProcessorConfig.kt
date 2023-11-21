@@ -1,4 +1,4 @@
-package tech.vermorken.multidbconfig
+package tech.vermorken.multidbconfig.config
 
 import org.axonframework.common.transaction.TransactionManager
 import org.axonframework.config.Configurer
@@ -7,10 +7,8 @@ import org.axonframework.eventhandling.tokenstore.TokenStore
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
+import org.springframework.orm.jpa.JpaVendorAdapter
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
-import java.util.*
 import javax.sql.DataSource
 
 @Configuration
@@ -30,7 +28,7 @@ class EventProcessorConfig {
             configurer.eventProcessing()
                 //Defaults
                 .registerTokenStore { tokenStore }
-                .registerDefaultTransactionManager{ axonTransactionManager }
+                .registerDefaultTransactionManager { axonTransactionManager }
                 //Alternatives
                 .registerTokenStore("tech.vermorken.multidbconfig.query.analytics") { secondaryTokenStore }
                 .registerTransactionManager("tech.vermorken.multidbconfig.query.analytics") { secondaryAxonTransactionManager }
@@ -38,22 +36,18 @@ class EventProcessorConfig {
     }
 
     /**
-     * Helper functions
+     * Helper function
      */
     companion object {
         fun createEntityManagerFactoryBean(
             persistenceUnit: String,
             dataSource: DataSource,
-            env: Environment
+            jpaVendorAdapter: JpaVendorAdapter
         ): LocalContainerEntityManagerFactoryBean {
             val em = LocalContainerEntityManagerFactoryBean()
             em.persistenceUnitName = persistenceUnit
             em.dataSource = dataSource
-            em.jpaVendorAdapter = HibernateJpaVendorAdapter().also { it.setGenerateDdl(true) }
-            em.setJpaProperties(Properties().also {
-                it.setProperty("jpa.database-platform", env.getProperty(("spring.jpa.database-platform")))
-                it.setProperty("hibernate.hbm2ddl.auto", env.getProperty(("spring.jpa.hibernate.ddl-auto")))
-            })
+            em.jpaVendorAdapter = jpaVendorAdapter
             em.afterPropertiesSet()
             return em
         }
